@@ -1,19 +1,15 @@
 package com.example.caculator;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Formatter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button bt1,bt2,bt3,bt4,bt5,bt6,bt7,bt8,bt9,bt0,deL,aC,muL,diV,adD,suB,equaL;
@@ -22,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String one,two,newpt;
     private String pt;
     boolean check; //check xem truong hop cong lien tiep
-//    Main
+    //    Main
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 textView.setText("");
                 pt="add";
                 break;
-             }
+            }
             case R.id.sub:{
                 if(!pt.equals("")){  resultcomplete(pt,"sub"); break;}
                 one = textView.getText().toString();
@@ -166,6 +162,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.equal:{
+                if(pt.equals("")){
+                    break;
+                }
                 resultcomplete(pt,"");
                 break;
             }
@@ -197,18 +196,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         number1 =  new BigDecimal(one);
         number2 =  new BigDecimal(two);
-        DecimalFormat form = new DecimalFormat("##.0000");
+        //DecimalFormat form = new DecimalFormat("##.0000");
         switch (nowpt){
             case "add":{
-                textView.setText(form.format(number1.add(number2)).toString());
+                textView.setText(number1.add(number2).toString());
                 break;
             }
             case "sub":{
-                textView.setText(form.format(number1.subtract(number2)).toString());
+                textView.setText(number1.subtract(number2).toString());
                 break;
             }
             case "mul":{
-                textView.setText(form.format(number1.multiply(number2)).toString());
+                textView.setText(number1.multiply(number2).toString());
                 break;
             }
             case "div":{
