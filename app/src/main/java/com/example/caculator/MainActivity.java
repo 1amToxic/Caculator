@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -179,8 +180,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void resultcomplete() {
         String resultinfix = textView.getText().toString();
         inp.setString(resultinfix);
+        if(!inp.test()){
+            Toast.makeText(this, "Error!!!", Toast.LENGTH_SHORT).show();
+            textView.setText("");
+            return;
+        }
         resultinfix = inp.getString();
-        textView.setText(resultinfix.toString());
+        if(resultinfix.equals("")){
+            Toast.makeText(this, "Error!!!", Toast.LENGTH_SHORT).show();
+            textView.setText("");
+        }
+        else
+            textView.setText(resultinfix.toString());
     }
     public void process(String s) {
 
@@ -213,7 +224,29 @@ class In{
         }
         return -1;
     }
-
+    boolean test(){ //test thua dau ngoac
+        boolean hasNumber = false; //kiem tra co so hay khong
+        Stack<Character> stackTest = new Stack<>();
+        for(int i = 0; i < exp.length(); i++){
+            if(exp.charAt(i)=='('){
+                stackTest.push('(');
+            }
+            else if(exp.charAt(i)==')'){
+                if(stackTest.empty()){
+                    return false;
+                }
+                else{
+                    stackTest.pop();
+                }
+            }
+            else if(exp.charAt(i)>='0'&&exp.charAt(i)<='9'){
+                hasNumber = true;
+            }
+        }
+        if(stackTest.empty())
+            return (true&&hasNumber);
+        else return false;
+    }
     // The main method that converts given infix expression
     // to postfix expression.
     String help(char oper, BigInteger big1, BigInteger big2){
@@ -232,6 +265,9 @@ class In{
                 break;
             }
             case ':':{
+                if(big2.equals("0")){
+                    return res;
+                }
                 res = big1.divide(big2).toString();
                 break;
             }
@@ -240,7 +276,6 @@ class In{
     }
     String SolveInfix()
     {
-
         String exp = this.exp;
         // initializing empty String for result
         String result = new String("");
@@ -278,7 +313,13 @@ class In{
                     big1 = new BigInteger(op1);
                     big2 = new BigInteger(op2);
                     String res = help(oper,big1,big2);
+                    if(res.equals("")){
+                        return result;
+                    }
                     operandstack.push(res);
+                    if(operatorStack.empty()){
+                        return result; //Error
+                    } //stackoperator empty
                 }
                 operatorStack.pop();
             }
@@ -295,6 +336,7 @@ class In{
                     big2 = new BigInteger(op2);
                     char oper = operatorStack.pop();
                     String res=  help(oper, big1,big2);
+                    if(res.equals(""))  return result; //th chia cho 0
                     operandstack.push(res);
                     operatorStack.push(charac);
                 }
@@ -307,6 +349,10 @@ class In{
 
         // pop all the operators from the stack
         while (!operatorStack.isEmpty()){
+            if(operatorStack.peek().equals("(")){
+                result = "";
+                return result;
+            }
             String op2 = operandstack.peek();
             operandstack.pop();
             String op1 = operandstack.peek();
@@ -315,9 +361,10 @@ class In{
             big2 = new BigInteger(op2);
             char oper = operatorStack.pop();
             String res= help(oper,big1,big2);
+            if(res.equals(""))  return result;
             operandstack.push(res);
         }
-        result = operandstack.peek();
+        result = operandstack.pop();
         return result;
     }
 
